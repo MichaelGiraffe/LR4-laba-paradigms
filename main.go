@@ -13,14 +13,6 @@ import (
 
 const API_KEY = "https://v6.exchangerate-api.com/v6/ce571ea97c53f23430eb5791/latest/"
 
-// ExchangeResponse — структура ответа API
-//type ExchangeResponse struct {
-//	Result             string             `json:"result"`
-//	BaseCode           string             `json:"base_code"`
-//	ConversionRates    map[string]float64 `json:"conversion_rates"`
-//	ErrorType          string             `json:"error-type"`
-//}
-
 // fetchRates делает запрос к API и возвращает карту курсов
 func fetchRates(value_input string, value_output string, amount float64) {
 	var url = API_KEY + value_input
@@ -37,16 +29,12 @@ func fetchRates(value_input string, value_output string, amount float64) {
 		return
 	}
 
-	// Используем map[string]any вместо структуры
 	var data map[string]any
 	if err := json.Unmarshal(body, &data); err != nil {
 		fmt.Println("JSON Unmarshal error:", err)
 		return
 	}
 
-	// Извлекаем вложенную карту с курсами
-	// Приходится кастить к map[string]any, так как json.Unmarshal
-	// кладет объекты именно в этот тип
 	rates, ok := data["conversion_rates"].(map[string]any)
 	if !ok {
 		fmt.Println("Could not find conversion_rates in response")
